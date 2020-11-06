@@ -1,2 +1,2 @@
 # SNCF
-Academic database management projet : an railway agency website
+Academic database management projet : a railway agency website
