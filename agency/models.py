@@ -34,7 +34,7 @@ class Client(models.Model):
     reduction_card_type = models.CharField(max_length=2, choices=REDUCTION_CARD_CHOICES, default=NO_CARD)
 
     def __str__(self):
-        return self.id_client
+        return str(self.id_client)
 
 
 
@@ -50,7 +50,7 @@ class Reservation(models.Model):
     # ForeignKey (FK) pour id_client
 
     def __str__(self):
-        return self.id_reservation
+        return str(self.id_reservation)
 
 
 
@@ -65,7 +65,7 @@ class Car(models.Model):
     # FK pour train_number
 
     def __str__(self):
-        return self.id_car
+        return str(self.id_car)
 
 
 class Train(models.Model):
@@ -73,7 +73,7 @@ class Train(models.Model):
     train_number = models.IntegerField()
 
     def __str__(self):
-        return self.train_number
+        return str(self.train_number)
 
 
 class Ride(models.Model):
@@ -88,7 +88,7 @@ class Ride(models.Model):
     # FK pour id_gare_arrivée
 
     def __str__(self):
-        return self.id_ride
+        return str(self.id_ride)
 
 
 class Station(models.Model):
@@ -98,7 +98,7 @@ class Station(models.Model):
     city = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.id_station
+        return str(self.id_station)
 
 
 class Place(models.Model):
@@ -109,4 +109,4 @@ class Place(models.Model):
     # FK pour id_trajet
 
     def __str__(self):
-        return self.id_place
+        return str(self.id_place)
