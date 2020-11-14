@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<div class="container-fluid">
+    <div class="row1 row">
+        <div class="col-lg-4">
+            <span class="sty" style="font-size:50px;">Réservez vos billets !</span>
+        </div>
+        <div class="col-lg-6"></div>
+    </div>
+
+<div ng-app="Myapp">
+<h1 align="center">Seat Availability</h1>
+	<br><br>
+
+	<div ng-controller="MyController" class="rounded bg-info">
+
+		
+		<div class="row"> 
+
+		<div class="col-lg-2"></div>
+		<div class="col-lg-2 col-md-4 col-sm-4" >
+            <b>Source Station:</b>
+		<br><input type="text" ng-model="src"/>
+		</div>
+		<div class="col-lg-2 col-md-4 col-sm-4">
+		Destination Station:<br><input type="text" ng-model="dest"/>
+		</div>
+		<div class="col-lg-2 col-md-4 col-sm-4">
+		Journey Date:<br><input type="text" ng-model="dt" placeholder="DD-MM-YYYY" />
+		</div>
+		<div class="col-lg-2">
+			<br>
+			<button type="button" ng-click="submitreq()">Submit</button>
+		</div>
+
+		</div>
+		
+		
+		<br/><br/>
+		<div id="table1" align="center" >
+			<div ng-model="ctr">
+				Current Selected Train:<strong>{{ctr}}</strong>
+			</div>
+			<table class ="table-striped table-hover table-bordered">
+				<tr>
+					<td>DATE</td>
+					<td ng-repeat="d in disp">{{d.date}}</td>
+					
+				</tr>
+				<tr>
+					<td>Status</td>
+					<td ng-repeat="x in disp">
+						{{x.status}}</td>
+				</tr>
+
+			</table>
+		</div>
+		<div id="table2" align="center">
+		Select Quota:-
+		<select ng-model="qta">
+			<option value="GN" selected>GENERAL</option>
+			<option value="TQ">TATKAL</option>
+		</select>
+		<table class="table-striped table-bordered table-hover">
+			<tr> 
+				<td>Number</td>
+				<td>Name</td>
+				<td>Departure time</td>
+				<td>Arrival time</td>
+				<td colspan="6">Class</td>
+			</tr>
+			<tr ng-repeat="x in tr">
+				<td>{{x.nb}}</td>
+				<td>{{x.nm}}</td>
+				<td>{{x.dtime}}</td>
+				<td>{{x.atime}}</td>
+				<td><button ng-click="getseat(x.nb,'1A')">1A</button></td>
+				<td><button ng-click="getseat(x.nb,'2A')">2A</button></td>
+				<td><button ng-click="getseat(x.nb,'3A')">3A</button></td>
+				<td><button ng-click="getseat(x.nb,'SL')">SL</button></td>
+				<td><button ng-click="getseat(x.nb,'2S')">2S</button></td>
+				<td><button ng-click="getseat(x.nb,'CC')">CC</button></td>
+				
+			</tr>
+
+		</table>
+		</div>
+        <div id="Res"></div>
+        </div>
+	</div>
+
+
+        <div class="col text-center" style="margin-top:100px;">
+            
+             <a href="search"><button class="btn btn-success">Search/Book Trains</button></a>
+             <a href="schedule"><button class="btn btn-info">Check Schedule</button></a>
+             <a href="pnr"><button class="btn btn-warning">Check PNR</button></a>
+             <a href="cancel"><button class="btn btn-default">Cancel Seat</button></a>
+
+        </div>
+    </div>
+
+{% endblock %}
