@@ -10,35 +10,34 @@ def index(request):
     return HttpResponse("Hello, world. You're at the agency index.")
 
 def homepage(request):
-    return render(request, 'agency/homepage.html')
-
+    return render(request, 'homepage.html')
 
 
 def newclient(request):
-    return render(request, 'agency/newclient.html')
+    return render(request, 'newclient.html')
 
 def nc_ridesearch(request):
-    return render(request, 'agency/nc_ridesearch.html')
+    return render(request, 'nc_ridesearch.html')
 
 def nc_availablerides(request):
-    return render(request, 'agency/nc_availablerides.html')
+    return render(request, 'nc_availablerides.html')
 
 def nc_ticket(request):
-    return render(request, 'agency/nc_ticket.html')
+    return render(request, 'nc_ticket.html')
 
 
 
 def existingclient(request):
-    return render(request, 'agency/existingclient.html')
+    return render(request, 'existingclient.html')
 
 def ec_ridesearch(request):
-    return render(request, 'agency/ec_ridesearch.html')
+    return render(request, 'ec_ridesearch.html')
 
 def ec_availablerides(request):
-    return render(request, 'agency/ec_availablerides.html')
+    return render(request, 'ec_availablerides.html')
 
 def ec_ticket(request):
-    return render(request, 'agency/ec_ticket.html')
+    return render(request, 'ec_ticket.html')
 
 
 
