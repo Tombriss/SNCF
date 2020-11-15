@@ -15,28 +15,27 @@
 <h1 class="sty" style="font-size:90px;" align="center">Welcome</h1>
 	<br><br>
 
-	<div ng-controller="MyController" style="margin-top:50px;">
+	<form action="logger" style="margin-top:50px;" method="post">
 
 		
 		<div class="row"> 
 
 		<div class="col-lg-2"></div>
 		<div class="sty2 col-lg-2 col-md-4 col-sm-4">
-            <b>Name</b>
+            <b>First Name</b>
 		<br><input type="text" class="input" ng-model="src"/>
 		</div>
 		<div class="sty2 col-lg-2 col-md-4 col-sm-4">
-			<b>Password</b>
+			<b>Name</b>
 		<br><input type="text" class="input" ng-model="dest"/>
 		</div>
 		<div class="sty2 col-lg-2 col-md-4 col-sm-4">
-			<b>Password confirmation</b>
-		<br><input type="text" class="input" ng-model="dt"/>
+			<b>Password</b>
+		<br><input type="password" class="input" ng-model="dest"/>
 		</div>
-		<div class="col-lg-2">
-			<br>
-			<button type="button" class="btn-outline-info" ng-click="login()">Submit</button>
-		</div>
+		<div class="sty2 col-lg-2 col-md-4 col-sm-4">
+		<br><input type="submit" value="Submit">
+		</form>
 
 		
 		</div>
