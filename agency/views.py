@@ -12,38 +12,14 @@ def index(request):
 def homepage(request):
     return render(request, 'homepage.html')
 
+def ridesearch(request):
+    return render(request, 'ridesearch.html')
 
-def newclient(request):
-    return render(request, 'newclient.html')
+def availability(request):
+    return render(request, 'availability.html')
 
-def nc_ridesearch(request):
-    return render(request, 'nc_ridesearch.html')
+def confirmation(request):
+    return render(request, 'confirmation.html')
 
-def nc_availablerides(request):
-    return render(request, 'nc_availablerides.html')
-
-def nc_ticket(request):
-    return render(request, 'nc_ticket.html')
-
-
-
-def existingclient(request):
-    return render(request, 'existingclient.html')
-
-def ec_ridesearch(request):
-    return render(request, 'ec_ridesearch.html')
-
-def ec_availablerides(request):
-    return render(request, 'ec_availablerides.html')
-
-def ec_ticket(request):
-    return render(request, 'ec_ticket.html')
-
-
-
-
-def bookedrides(request):
-    return render(request, 'agency/bookedrides.html')
-
-def listofrides(request):
-    return render(request, 'agency/listofrides.html')
+def ticket(request):
+    return render(request, 'ticket.html')

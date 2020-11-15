@@ -11,7 +11,7 @@
     </div>
 
 <div ng-app="Myapp">
-<h1 align="center">Welcome</h1>
+<h1 align="center">What is your next journey?</h1>
 	<br><br>
 
 	<div ng-controller="MyController" class="rounded bg-info">
@@ -21,23 +21,30 @@
 
 		<div class="col-lg-2"></div>
 		<div class="col-lg-2 col-md-4 col-sm-4" >
-            <b>Email adress</b>
+            <b>From</b>
 		<br><input type="text" ng-model="src"/>
 		</div>
 		<div class="col-lg-2 col-md-4 col-sm-4">
-			<b>Password</b>
+			<b>To</b>
 		<br><input type="text" ng-model="dest"/>
 		</div>
 		<div class="col-lg-2 col-md-4 col-sm-4">
-			<b>Password confirmation</b>
-		<br><input type="text" ng-model="dt"/>
+			<b>Date</b>
+		<br><input type="text" ng-model="dt" placeholder="DD-MM-YYYY" />
 		</div>
 		<div class="col-lg-2">
 			<br>
 			<button type="button" ng-click="submitreq()">Submit</button>
 		</div>
 
-		
 		</div>
+		
+		
+		<br/><br/>
+		
+
+	</div>
+
+    </div>
 
 {% endblock %}
