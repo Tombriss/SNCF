@@ -11,30 +11,31 @@
     </div>
 
 <div ng-app="Myapp">
-<h1 align="center">Welcome</h1>
+
+<h1 class="sty" style="font-size:90px;" align="center">Welcome</h1>
 	<br><br>
 
-	<div ng-controller="MyController" class="rounded bg-info">
+	<div ng-controller="MyController" style="margin-top:50px;">
 
 		
 		<div class="row"> 
 
 		<div class="col-lg-2"></div>
-		<div class="col-lg-2 col-md-4 col-sm-4" >
-            <b>Email adress</b>
-		<br><input type="text" ng-model="src"/>
+		<div class="sty2 col-lg-2 col-md-4 col-sm-4">
+            <b>Name</b>
+		<br><input type="text" class="input" ng-model="src"/>
 		</div>
-		<div class="col-lg-2 col-md-4 col-sm-4">
+		<div class="sty2 col-lg-2 col-md-4 col-sm-4">
 			<b>Password</b>
-		<br><input type="text" ng-model="dest"/>
+		<br><input type="text" class="input" ng-model="dest"/>
 		</div>
-		<div class="col-lg-2 col-md-4 col-sm-4">
+		<div class="sty2 col-lg-2 col-md-4 col-sm-4">
 			<b>Password confirmation</b>
-		<br><input type="text" ng-model="dt"/>
+		<br><input type="text" class="input" ng-model="dt"/>
 		</div>
 		<div class="col-lg-2">
 			<br>
-			<button type="button" ng-click="submitreq()">Submit</button>
+			<button type="button" class="btn-outline-info" ng-click="login()">Submit</button>
 		</div>
 
 		
