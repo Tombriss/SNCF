@@ -28,7 +28,8 @@ class Client(models.Model):
 
     first_name = models.CharField(max_length=200)
     last_name = models.CharField(max_length=200)
-    id_client = models.CharField(max_length=200, blank=True)
+    email = models.CharField(max_length=200)
+    password = models.CharField(max_length=200)
 
     # création d'un menu déroulant, correctement réalisée ?
     NO_CARD = 'NC'
@@ -40,13 +41,13 @@ class Client(models.Model):
     reduction_card_type = models.ForeignKey(Reduction, on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.id_client)
+        return str(self.last_name)
 
 
 
 class Train(models.Model):
 
-    id_train = models.IntegerField(blank=True)
+    id_train = models.IntegerField()
 
     def __str__(self):
         return str(self.id_train)
@@ -56,12 +57,11 @@ class Train(models.Model):
 
 class Station(models.Model):
 
-    id_station = models.IntegerField(blank=True)
     name_station = models.CharField(max_length=200)
     city = models.CharField(max_length=200)
 
     def __str__(self):
-        return str(self.id_station)
+        return str(self.name_station)
 
 
 
@@ -70,7 +70,7 @@ class Car(models.Model):
     number_available_places_car = models.IntegerField()
     number_reserved_places_car = models.IntegerField()
     car_number = models.IntegerField()
-    id_car = models.IntegerField(blank=True)
+    id_car = models.IntegerField()
 
     # FK pour id_train
     id_train = models.ForeignKey('Train', on_delete=models.CASCADE)
@@ -83,7 +83,7 @@ class Car(models.Model):
 
 class Ride(models.Model):
 
-    id_ride = models.IntegerField(blank=True)
+    id_ride = models.CharField(max_length=200)
     price_ride = models.FloatField()
     departure_time = models.DateTimeField()
     arrival_time = models.DateTimeField()
@@ -103,7 +103,7 @@ class Reservation(models.Model):
 
     price_ticket = models.FloatField()
     place_number = models.IntegerField()
-    id_reservation = models.IntegerField()
+    id_reservation = models.CharField(max_length=200)
 
     # vérifier que les foreign keys ont du sens :
     # ForeignKey (FK) pour id_ride
