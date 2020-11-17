@@ -2,12 +2,52 @@
 
 {% block body %}
 
+<script>
+	const sendCreds = async () => {	
+		const firstname = document.getElementById("firstname").value
+		const name = document.getElementById("name").value
+		const pwd = document.getElementById("pwd").value
+
+		const response = await $.ajax({
+		    url : "agency/logger/", // the endpoint
+		    type : "POST", // http method
+			data : {'firstname':firstname,'name':name,'pwd':pwd}
+		})
+		console.log(firstname)
+		console.log(response)
+
+		document.location.reload(true);
+
+		// $(document).ready(function() {
+    	// 	$('#user').text(function(i, oldText) {
+        // 	return name;})
+		// })
+	}
+	const logout = async () => {
+		const response = await $.ajax({
+		    url : "agency/logout/", // the endpoint
+		    type : "POST", // http method
+		})
+		console.log(response)
+
+		$(document).ready(function() {
+    		$('#user').text(function(i, oldText) {
+        	return 'Not connected';})
+		})
+	
+	} // data sent with the post request
+		
+			
+	</script>
+
 <div class="container-fluid">
     <div class="row1 row">
         <div class="col-lg-4">
             <span class="sty" style="font-size:50px;">Book your train!</span>
         </div>
-        <div class="col-lg-6"></div>
+		<div class="col-lg-6"></div>
+		<div class="col-lg-1"><span id="user" class="sty2" style="font-size:17px;"> {{request.session.firstname}}  {{request.session.name}} </span></div>
+		<div class="col-lg-1"><button class="btn btn-danger" onclick="logout()">Log Out</button></div>
     </div>
 
 <div ng-app="Myapp">
@@ -15,7 +55,7 @@
 <h1 class="sty" style="font-size:90px;" align="center">Welcome</h1>
 	<br><br>
 
-	<form action="logger" style="margin-top:50px;" method="post">
+	<form method ='POST' style="margin-top:50px;">
 
 		
 		<div class="row"> 
@@ -23,21 +63,27 @@
 		<div class="col-lg-2"></div>
 		<div class="sty2 col-lg-2 col-md-4 col-sm-4">
             <b>First Name</b>
-		<br><input type="text" class="input" ng-model="src"/>
+		<br><input id ="firstname" type="text" class="input" ng-model="src"/ value="Thomas">
 		</div>
 		<div class="sty2 col-lg-2 col-md-4 col-sm-4">
 			<b>Name</b>
-		<br><input type="text" class="input" ng-model="dest"/>
+		<br><input id = "name" type="text" class="input" ng-model="dest"/ value="Brisson">
 		</div>
 		<div class="sty2 col-lg-2 col-md-4 col-sm-4">
 			<b>Password</b>
-		<br><input type="password" class="input" ng-model="dest"/>
+		<br><input id = "pwd" type="password" class="input" ng-model="dest"/ value="sncf">
 		</div>
 		<div class="sty2 col-lg-2 col-md-4 col-sm-4">
-		<br><input type="submit" value="Submit">
-		</form>
+		<br><input type="button" onclick="sendCreds()" value="Submit">
+	
+	</form>
+
+	<form action="/agency/ridesearch">
+		<input type="submit" value="Search for a ride" />
+	</form>
 
 		
-		</div>
+</div>
+
 
 {% endblock %}

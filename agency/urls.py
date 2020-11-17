@@ -5,11 +5,13 @@ from . import views
 urlpatterns = [
 
     # je ne sais pas si on doit laisser une procédure initiale... ?
-    path('', views.index, name='index'),
 
     # page d'accueil permettant au client (nouveau ou pas) de s'identifier
     path('login/', views.login, name='login'),
-    path('login/logger', views.logger, name='logger'),
+
+    path('logger/', views.logger, name='logger'),
+
+    path('logout/', views.logout, name='logout'),
 
     # # page d'accueil permettant au client (nouveau ou pas) de s'identifier
     # path('homepage/login/<str:name>', views.login, name='login'),

@@ -13,17 +13,31 @@ from django.views.generic import CreateView
 from .models import Client
 
 
-def index(request):
-    logout(request)
-    return redirect(ridesearch)
+def logout(request):
+    request.session['name'] = ''
+    request.session['firstname'] = ''
+    request.session['id'] = ''
+
+    return HttpResponse('ok')
 
 def login(request):
+
     return render(request, 'login.html')
 
 def logger(request):
+    
+    request.session['name'] = request.POST.get('name','')
+    request.session['firstname'] = request.POST.get('firstname','')
+    request.session['id'] = request.POST.get('id','')
 
-    print('laaaaa')
-    return(None)
+    print(request.session['firstname'])
+    print(request.session['name'])
+    
+    print('logger',request.session)
+
+    # check here if client in bdd, else, create client
+
+    return HttpResponse('ok')
 
 def availability(request):
     return render(request, 'availability.html')
@@ -34,14 +48,15 @@ def confirmation(request):
 def ticket(request):
     return render(request, 'ticket.html')
 
-@login_required(login_url='/agency/login/')
 def ridesearch(request):
-    print(request)
-    username = request.POST['username']
-    password = request.POST['password']
-    print(user,password)
-    user = authenticate(request, username=username, password=password)
-    if user is not None:
-        login(request, user)
+    print('ridesearch')
+    print('session : ',request.session.get('name'))
+    # username = request.POST['username']
+    # password = request.POST['password']
+    # print(user,password)
+    # user = authenticate(request, username=username, password=password)
+    # if user is not None:
+    #     login(request, user)
+
 
     return render(request, 'ridesearch.html')
