@@ -72,7 +72,6 @@ def ridesearch(request):
 
     return render(request, 'ridesearch.html')
 
-def search(request):
-    trains.filter()
+
 
 

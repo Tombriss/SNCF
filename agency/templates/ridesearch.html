@@ -2,6 +2,25 @@
 
 {% block body %}
 
+<style>
+	table {
+	  border-collapse: collapse;
+	  border-spacing: 0;
+	  width: 100%;
+	  border: 1px solid #ddd;
+	  background-color: rgb(255, 255, 255);
+
+	}
+	
+	th, td {
+	  text-align: center;
+	  padding: 8px;
+	}
+	
+	tr:nth-child(even){background-color: #f2f2f2}
+	
+</style>
+
 <script>
 	const logout = async () => {
 	const response = await $.ajax({
@@ -15,9 +34,27 @@
 	$(document).ready(function() {
 		$('#user').text(function(i, oldText) {
 		return '';})
-	})
+	})}
 
-} // data sent with the post request
+	const submitReq = async () => {	
+		const from = document.getElementById("from").value
+		const to = document.getElementById("to").value
+		const date = document.getElementById("date").value
+
+		const response = await $.ajax({
+		    url : "agency/logger/", // the endpoint
+		    type : "POST", // http method
+			data : {'from':from,'to':to,'date':date}
+		})
+		console.log(firstname)
+		console.log(response)
+
+		document.location.reload(true);
+
+		console.log("rel")
+	}
+
+// data sent with the post request
 </script>
 
 <div class="container-fluid">
@@ -31,10 +68,10 @@
 	</div>
 
 <div ng-app="Myapp">
-<h1 class="sty" style="font-size:90px;" align="center">What is your next journey?</h1>
+<h1 class="sty" style="font-size:70px;" align="center">What is your next journey?</h1>
 	<br><br>
 
-	<div ng-controller="MyController" style="margin-top:50px;" class="rounded">
+	<div ng-controller="MyController" style="margin-top:10px;" class="rounded">
 
 		
 		<div class="row"> 
@@ -42,19 +79,19 @@
 		<div class="col-lg-2"></div>
 		<div class="sty2 col-lg-2 col-md-4 col-sm-4" >
             <b>From</b>
-		<br><input type="text" class="input" ng-model="src"/>
+		<br><input id ="from" type="text" class="input" ng-model="src"/ value = "Lyon">
 		</div>
 		<div class="sty2 col-lg-2 col-md-4 col-sm-4">
 			<b>To</b>
-		<br><input type="text" class="input" ng-model="dest"/>
+		<br><input id ="to" type="text" class="input" ng-model="dest"/ value = "Paris">
 		</div>
 		<div class="sty2 col-lg-2 col-md-4 col-sm-4">
 			<b>Date</b>
-		<br><input type="text" class="input" ng-model="dt" placeholder="DD-MM-YYYY" />
+		<br><input  id ="date" type="date" class="input" ng-model="dt" placeholder="DD-MM-YYYY" />
 		</div>
 		<div class="col-lg-2">
 			<br>
-			<button type="button" ng-click="submitreq()">Submit</button>
+			<button type="button" ng-click="submitReq()">Submit</button>
 		</div>
 
 		</div>
@@ -65,6 +102,97 @@
 
 	</div>
 
-    </div>
+	</div>
+
+	<div>
+		<table>
+			<tr>
+			<th>Train N°</th>
+			<th>Arrival</th>
+			<th>Departure</th>
+			<th>Available sits</th>
+			<th>Price</th>
+		  </tr>
+	</table>
+	</div>
+	
+	<div class="center-div" style="height:250px; overflow:auto;">
+		<table  cellspacing="0" cellpadding="0" border="0" style="overflow: scroll ;white-space: nowrap; " >
+			<tbody id="tbody"></tbody>
+		</table>
+	  </div>
+
+<script>
+
+obj = [{
+    "key": "apple",
+    "value": 1.90
+	}, {
+    "key": "berry",
+    "value": 1.7
+	}, {
+    "key": "banana",
+    "value": 1.5
+	}, {
+    "key": "cherry",
+    "value": 1.2
+	},{
+    "key": "apple",
+    "value": 1.90
+	}, {
+    "key": "berry",
+    "value": 1.7
+	}, {
+    "key": "banana",
+    "value": 1.5
+	}, {
+    "key": "cherry",
+    "value": 1.2
+	},{
+    "key": "apple",
+    "value": 1.90
+	}, {
+    "key": "berry",
+    "value": 1.7
+	}, {
+    "key": "banana",
+    "value": 1.5
+	}, {
+    "key": "cherry",
+    "value": 1.2
+	},{
+    "key": "apple",
+    "value": 1.90
+	}, {
+    "key": "berry",
+    "value": 1.7
+	}, {
+    "key": "banana",
+    "value": 1.5
+	}, {
+    "key": "cherry",
+    "value": 1.2
+	}]
+
+	var tbody = document.getElementById("tbody")
+
+	for (var i = 0; i < obj.length; i++) {
+
+		console.log(i)
+
+		var tr = "<tr>";
+
+		/* Verification to add the last decimal 0 */
+		if (obj[i].value.toString().substring(obj[i].value.toString().indexOf('.'), obj[i].value.toString().length) < 2) 
+			obj[i].value += "0";
+
+		/* Must not forget the $ sign */
+		tr += "<td>" + obj[i].key + "</td>" + "<td>$" + obj[i].value.toString() + "</td></tr>";
+
+		/* We add the table row to the table body */
+		tbody.innerHTML += tr;
+	}
+</script>
+	  
 
 {% endblock %}
