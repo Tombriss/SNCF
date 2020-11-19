@@ -2,13 +2,33 @@
 
 {% block body %}
 
+<script>
+	const logout = async () => {
+	const response = await $.ajax({
+		url : "../logout/", // the endpoint
+		type : "POST", // http method
+	})
+	console.log(response)
+
+	window.location.href = '../../'
+
+	$(document).ready(function() {
+		$('#user').text(function(i, oldText) {
+		return '';})
+	})
+
+} // data sent with the post request
+</script>
+
 <div class="container-fluid">
     <div class="row1 row">
         <div class="col-lg-4">
             <span class="sty" style="font-size:50px;">Book your train!</span>
-        </div>
-        <div class="col-lg-6"></div>
-    </div>
+		</div>
+		<div class="col-lg-6"></div>
+		<div class="col-lg-1"><span id="user" class="sty2" style="font-size:17px;"> {{request.session.firstname}}  {{request.session.name}} </span></div>
+		<div class="col-lg-1"><button class="btn btn-danger" onclick="logout()">Log Out</button></div>	
+	</div>
 
 <div ng-app="Myapp">
 <h1 class="sty" style="font-size:90px;" align="center">What is your next journey?</h1>

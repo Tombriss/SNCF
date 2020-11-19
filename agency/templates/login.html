@@ -3,6 +3,34 @@
 {% block body %}
 
 <script>
+
+	$(document).ready(function() {
+		$('#search').hide();
+		$('#logout').hide();
+	})
+
+
+	var connected = '';
+	const response = $.ajax({
+		    url : "agency/session/connected", // the endpoint
+		    type : "GET", // http method
+			complete: function(r){
+       connected = r.responseText;
+	   if (connected=='True'){
+			$(document).ready(function() {
+			$('#search').show();
+			$('#logout').show();
+			})
+	   }
+    }
+	})
+
+
+	console.log(connected)
+
+
+
+
 	const sendCreds = async () => {	
 		const firstname = document.getElementById("firstname").value
 		const name = document.getElementById("name").value
@@ -18,11 +46,9 @@
 
 		document.location.reload(true);
 
-		// $(document).ready(function() {
-    	// 	$('#user').text(function(i, oldText) {
-        // 	return name;})
-		// })
+		console.log("rel")
 	}
+
 	const logout = async () => {
 		const response = await $.ajax({
 		    url : "agency/logout/", // the endpoint
@@ -30,15 +56,18 @@
 		})
 		console.log(response)
 
+		window.location.href = ''
+
 		$(document).ready(function() {
-    		$('#user').text(function(i, oldText) {
-        	return 'Not connected';})
+		$('#search').hide();
 		})
-	
+
 	} // data sent with the post request
+
+
 		
 			
-	</script>
+</script>
 
 <div class="container-fluid">
     <div class="row1 row">
@@ -47,7 +76,7 @@
         </div>
 		<div class="col-lg-6"></div>
 		<div class="col-lg-1"><span id="user" class="sty2" style="font-size:17px;"> {{request.session.firstname}}  {{request.session.name}} </span></div>
-		<div class="col-lg-1"><button class="btn btn-danger" onclick="logout()">Log Out</button></div>
+		<div class="col-lg-1"><button id='logout' class="btn btn-danger" onclick="logout()">Log Out</button></div>
     </div>
 
 <div ng-app="Myapp">
@@ -78,8 +107,8 @@
 	
 	</form>
 
-	<form action="/agency/ridesearch">
-		<input type="submit" value="Search for a ride" />
+	<form id ='search' action="/agency/ridesearch">
+		<input  type="submit" value="Search for a ride" />
 	</form>
 
 		

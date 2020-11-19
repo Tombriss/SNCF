@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path,re_path
 
 from . import views
 
@@ -12,6 +12,8 @@ urlpatterns = [
     path('logger/', views.logger, name='logger'),
 
     path('logout/', views.logout, name='logout'),
+
+    re_path(r'^session/(?P<key>[^/]+)$', views.SessionVarView.as_view(), name='session-var'),
 
     # # page d'accueil permettant au client (nouveau ou pas) de s'identifier
     # path('homepage/login/<str:name>', views.login, name='login'),

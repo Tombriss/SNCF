@@ -19,6 +19,7 @@ class Reduction(models.Model):
     PERCENTAGES = [(NO_REDUCTION, '0%'), (JUNIOR_REDUCTION, '30%'), (SENIOR_REDUCTION, '20%')]
     reduction_percentage = models.FloatField(choices=PERCENTAGES, default=NO_REDUCTION)
 
+
     def __str__(self):
         return self.reduction_card_type
 
@@ -42,7 +43,6 @@ class Client(models.Model):
 
     def __str__(self):
         return str(self.last_name)
-
 
 
 class Train(models.Model):
@@ -129,3 +129,4 @@ class Place(models.Model):
 
     def __str__(self):
         return str(self.id_place)
+
