@@ -49,27 +49,33 @@ def logger(request):
 
 
 
+def payement(request,id_train='67855'):
 
-def availability(request):
-    return render(request, 'availability.html')
+    context = {}
+    
+    context["id_train"] = id_train
+    context["from"] = "Paris"
+    context["to"] = "Lyon"
+    context["date"] = "02/12/2020"
+    context["time_departure"] = "08:00"
+    context["time_arrival"] = "10:00"
+    context["available"] = True
+    context["free_car"] = 6
+
+    context["prix"] = 50
+    context["reduction"] = 'Carte Jeune'
+    context["prix_final"] = 42
+
+    return render(request, 'confirmation.html',context)
 
 def confirmation(request):
-    return render(request, 'confirmation.html')
+    
+    return(render)
 
 def ticket(request):
     return render(request, 'ticket.html')
 
 def ridesearch(request):
-    print('ridesearch')
-    print('session : ',request.session.get('name'))
-    # username = request.POST['username']
-    # password = request.POST['password']
-    # print(user,password)
-    # user = authenticate(request, username=username, password=password)
-    # if user is not None:
-    #     login(request, user)
-
-
     return render(request, 'ridesearch.html')
 
 
