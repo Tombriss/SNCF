@@ -19,10 +19,11 @@ class SessionVarView(TemplateView):
         return HttpResponse(request.session.get(kwargs['key'],''))
 
 def logout(request):
+    request.session['id_client'] = ''
     request.session['name'] = ''
     request.session['firstname'] = ''
-    request.session['id'] = ''
     request.session['password'] = ''
+    request.session['reduction'] = ''
     request.session['connected'] = False
 
     return HttpResponse('ok')
@@ -33,20 +34,27 @@ def login(request):
 
 def logger(request):
     
+    request.session['id_client'] = request.POST.get('id_client','TB87382')
     request.session['name'] = request.POST.get('name','')
     request.session['firstname'] = request.POST.get('firstname','')
-    request.session['id'] = request.POST.get('id','')
+    request.session['password'] = request.POST.get('reduction','')
+    request.session['password'] = request.POST.get('password','')
     request.session['connected'] = True
-
-    print(request.session['firstname'])
-    print(request.session['name'])
-    
-    print('logger',request.session)
 
     # check here if client in bdd, else, create client
 
     return HttpResponse('ok')
 
+def search(request):
+
+    id_client = request.POST.get('id_client')
+    from_station = request.POST.get('from')
+    to_station = request.POST.get('to')
+    date = request.POST.get('date')
+
+    print(from_station,to_station,date,id_client)
+
+    return(HttpResponse('ok'))
 
 
 def payement(request,id_train='67855'):
@@ -56,21 +64,33 @@ def payement(request,id_train='67855'):
     context["id_train"] = id_train
     context["from"] = "Paris"
     context["to"] = "Lyon"
-    context["date"] = "02/12/2020"
-    context["time_departure"] = "08:00"
+    context["wday"] = "vendredi"
+    context["day"] = "02"
+    context["month"] = "décembre"
+    context["short_month"] = context["month"][:3]
+    context["year"] = "2020"
+    context["time_departure"] = "08:00" 
     context["time_arrival"] = "10:00"
     context["available"] = True
-    context["free_car"] = 6
+    context["car"] = 6
+    context["sit"] = 43
 
-    context["prix"] = 50
+    context["price"] = 50
     context["reduction"] = 'Carte Jeune'
-    context["prix_final"] = 42
+    context["final_price"] = 42
 
-    return render(request, 'confirmation.html',context)
+    return render(request, 'payement.html',context)
 
 def confirmation(request):
+
+    id_client = request.POST.get('id_client')
+    id_train = request.POST.get('id_train')
+    car = request.POST.get('car')
+    sit = request.POST.get('sit')
+
+    print(id_client,id_train,car,sit)
     
-    return(render)
+    return(HttpResponse('ok'))
 
 def ticket(request):
     return render(request, 'ticket.html')

@@ -45,21 +45,18 @@
 	})}
 
 	const submitReq = async () => {	
+		console.log('seeking for rides...')
 		const from = document.getElementById("from").value
 		const to = document.getElementById("to").value
 		const date = document.getElementById("date").value
+		const id_client = document.getElementById("id_client").value
 
 		const response = await $.ajax({
-		    url : "agency/logger/", // the endpoint
+		    url : "../search/", // the endpoint
 		    type : "POST", // http method
-			data : {'from':from,'to':to,'date':date}
+			data : {'from':from,'to':to,'date':date,'id_client':id_client}
 		})
-		console.log(firstname)
 		console.log(response)
-
-		document.location.reload(true);
-
-		console.log("rel")
 	}
 
 // data sent with the post request
@@ -95,11 +92,11 @@
 		</div>
 		<div class="sty2 col-lg-2 col-md-4 col-sm-4">
 			<b>Date</b>
-		<br><input  id ="date" type="date" class="input" ng-model="dt" placeholder="DD-MM-YYYY" />
+		<br><input  id ="date" type="date" class="input" ng-model="dt"/ value = "2020-11-04">
 		</div>
 		<div class="col-lg-2">
 			<br>
-			<button type="button" ng-click="submitReq()">Submit</button>
+			<button type="button" onclick="submitReq()">Submit</button>
 		</div>
 
 		</div>
@@ -129,6 +126,8 @@
 			<tbody id="tbod"></tbody>
 		</table>
 	  </div>
+
+	<input id="id_client"  type="hidden" value="{{request.session.id_client}}">
 
 <script>
 

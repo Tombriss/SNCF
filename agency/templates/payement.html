@@ -204,6 +204,40 @@ const logout = async () => {
 		$('#user').text(function(i, oldText) {
 		return '';})
 	})}
+
+const payement = async () => {
+    const id_client = document.getElementById("id_client").value
+    const id_train = document.getElementById("id_train").value
+    const car = document.getElementById("car").value
+    const sit = document.getElementById("sit").value
+
+    const response = await $.ajax({
+		    url : "confirmation/", // the endpoint
+		    type : "POST", // http method
+			data : {id_client,id_train,car,sit}
+		})
+    console.log(response)
+}
+
+    // const response = $.ajax({
+	// 	    url : "agency/session/id_client", // the endpoint
+	// 	    type : "GET", // http method
+	// 		complete: function(r){
+    //    id_client = r.responseText;
+	//    if (connected=='True'){
+	// 		$(document).ready(function() {
+	// 		$('#search').show();
+	// 		$('#logout').show();
+	// 		})
+	//    }
+    // }})
+
+//     const response = await $.ajax({
+//         url : "../confirmation/",
+//         type : "POST",
+//         data : {id_client,id_}
+//     })
+// }
 </script>
 
 <div class="container-fluid">
@@ -218,8 +252,8 @@ const logout = async () => {
 
 <div ng-app="Myapp">
 
-<h1 class="sty" style="font-size:90px;" align="center">Confirmation</h1>
-	<br><br>	
+<h1 class="sty" style="font-size:70px;" align="center">Confirmation</h1>
+	
 </div>
 
 <section class="container" style="width:60%">
@@ -227,44 +261,51 @@ const logout = async () => {
         <article class="card fl-left">
           <section class="date">
             <time datetime="23th feb">
-              <span>23</span><span>feb</span>
+              <span>{{day}}</span><span>{{short_month}}</span>
             </time>
           </section>
           <section class="card-cont">
             <small>SNCF</small>
-            <h2>Paris --- Lyon</h2>
+            <h2>{{from}} --- {{to}}</h2>
             <div class="even-date">
              <i class="fa fa-calendar"></i>
              <time>
-               <span>wednesday 28 december 2020</span>
-               <span>Departure : 08:00 </span>
-               <span>Arrival : 10:00 </span>
+               <span>{{wday}} {{day}} {{month}} {{year}}</span>
+               <span>Departure : {{time_departure}} </span>
+               <span>Arrival : {{time_arrival}} </span>
              </time>
             </div>
             <br></br>
-            <span>Voiture 7 place 65</span>
+            <span>Voiture {{car}} place {{sit}}</span>
             <br></br>
-              Thomas Brisson
+              {{request.session.firstname}} {{request.session.name}}
             <br></br>
-            <span style="text-align:right;">Réduction : Carte Jeune</span>
+            <span style="text-align:right;">Réduction : {{reduction}}</span>
           </section>
 
           <section class="card-cont" style="background-color: #07990ead;">
             <br></br>
             <br></br>
-            <h2 style="color: #ffffff;">39€</h2>
+            <h2 style="color: #ffffff;">{{final_price}}€</h2>
 
             <div class="even-info" >
-            <span style="color: #ffffff;text-align:right;">sans réduction: 45€</span>
+            <span style="color: #ffffff;text-align:right;">sans réduction: {{price}}€</span>
             </div>
           </section>
 
         </article>
 
+        <section class="container" style="width:25%">
+        <button class="btn btn-outline-success btn-lg" onclick="payement()">Confirm payement</button>
+        </section>
+
       </div>
       
     </div>
-    <button>Confirm {{from}}</button>	
 
+    <input id="id_client"  type="hidden" value="{{request.session.id_client}}">
+    <input id="id_train" type="hidden" value="{{id_train}}">
+    <input id="car" type="hidden" value="{{car}}">
+    <input id="sit" type="hidden" value="{{sit}}">
 
 {% endblock %}

@@ -24,6 +24,8 @@ urlpatterns = [
     # le client confirme sa réservation
     path('payement/<str:id_train>', views.payement, name='payement'),
 
+    path('payement/confirmation/', views.confirmation, name='confirmation'),
 
+    path('search/', views.search, name='search')
 
 ]
