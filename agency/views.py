@@ -12,7 +12,7 @@ from django.contrib.auth import authenticate, login,logout
 # Create your views here.
 
 from django.views.generic import CreateView
-from .models import Client
+from .models import Client,Ride
 from django.views.generic.base import TemplateView
 
 from datetime import datetime
@@ -48,18 +48,6 @@ def logger(request):
     # check here if client in bdd, else, create client
 
     return HttpResponse('ok')
-
-def search(request):
-
-    id_client = request.POST.get('id_client')
-    from_station = request.POST.get('from')
-    to_station = request.POST.get('to')
-    date = request.POST.get('date')
-
-    print(from_station,to_station,date,id_client)
-
-    return(HttpResponse('ok'))
-
 
 def payement(request,id_train='67855'):
 
@@ -103,26 +91,22 @@ def ridesearch(request):
     return render(request, 'ridesearch.html')
 
 
-
-
 def search(request):
 
-    # récupération des trajets correspondants à la requête du client
-    request.session['departure_station'] = request.POST.get('departure_station','')
-    request.session['arrival_station'] = request.POST.get('arrival_station','')
-    request.session['departure_date'] = request.POST.get('departure_date','')
+    # conditions sur le trajet souhaités 
+    departure_station = request.POST.get('from')
+    arrival_station = request.POST.get('to')
+    departure_date = request.POST.get('date')
 
+    # recuperation des trajets qui verifient cette condition dans la BDD 
     rides = Ride.objects.raw('''SELECT * FROM agency_ride 
-                                WHERE departure_station = request.session['departure_station'], arrival_station = request.session['arrival_station'], departure_date = request.session['departure_date']
+                                WHERE departure_station = departure_station, arrival_station = arrival_station, departure_date = departure_date
                                     ''')
 
+    # id du client                
+    id_client = request.POST.get('id_client')
 
-
-
-    # récupération du pourcentage de réduction à appliquer
-    request.session['firstname'] = request.POST.get('firstname','')
-    request.session['name'] = request.POST.get('name','')
-
+    # récupération de 
     card_type = Client.objects.raw('''SELECT * FROM agency_client
                                     WHERE first_name = request.session['firstname'], last_name = request.session['name']''').reduction_card_type # ne garde que le type de card, type str ex: 'JC' pour junior card
 
