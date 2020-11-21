@@ -39,8 +39,6 @@ class Client(models.Model):
     REDUCTION_CARD_CHOICES = [(NO_CARD, 'no reduction'), (JUNIOR_CARD, 'junior reduction'), (SENIOR_CARD, 'senior reduction')]
     reduction_card_type = models.CharField(max_length=2, choices=REDUCTION_CARD_CHOICES, default=NO_CARD)
 
-    reduction_card_type = models.ForeignKey(Reduction, on_delete=models.CASCADE)
-
     def __str__(self):
         return str(self.last_name)
 
@@ -85,15 +83,17 @@ class Ride(models.Model):
 
     id_ride = models.CharField(max_length=200)
     price_ride = models.FloatField()
-    departure_time = models.DateTimeField()
-    arrival_time = models.DateTimeField()
+    departure_date = models.DateField()
+    departure_time = models.TimeField()
+    arrival_date = models.DateField() 
+    arrival_time = models.TimeField()
 
     # FK pour id_train
     # FK pour id_gare_départ
     # FK pour id_gare_arrivée
     id_train = models.ForeignKey('Train', on_delete=models.CASCADE)
-    departure_station = models.ForeignKey('Station', on_delete=models.CASCADE, related_name='departure')
-    arrival_station = models.ForeignKey('Station', on_delete=models.CASCADE, related_name='arrival')
+    departure_station = models.ForeignKey('Station', on_delete=models.CASCADE, related_name='departure', db_index=False, db_column='gare_depart')
+    arrival_station = models.ForeignKey('Station', on_delete=models.CASCADE, related_name='arrival', db_column='gare_arrivee')
 
     def __str__(self):
         return str(self.id_ride)
