@@ -21,13 +21,11 @@ urlpatterns = [
     # le client renseigne les infos concernant son trajet (incluant la réduction)
     path('ridesearch/', views.ridesearch, name='ridesearch'),
 
-    # le client visualise et choisis les trajets dispo (avec ou sans la réduction de prix affichée?)
-    path('homepage/ridesearch/availability/', views.availability, name='availability'),
-
     # le client confirme sa réservation
-    path('homepage/ridesearch/availability/confirmation/', views.confirmation, name='confirmation'),
+    path('payement/<str:id_train>', views.payement, name='payement'),
 
-   # affichage du ticket acheté
-   path('homepage/ridesearch/availability/confirmation/ticket/', views.ticket, name='ticket')
+    path('payement/confirmation/', views.confirmation, name='confirmation'),
+
+    path('search/', views.search, name='search')
 
 ]

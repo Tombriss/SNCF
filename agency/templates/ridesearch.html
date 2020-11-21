@@ -9,15 +9,23 @@
 	  width: 100%;
 	  border: 1px solid #ddd;
 	  background-color: rgb(255, 255, 255);
+	  text-align: center;
+	  table-layout: fixed ;
 
 	}
 	
 	th, td {
 	  text-align: center;
 	  padding: 8px;
+	  width: 25% ;
 	}
 	
 	tr:nth-child(even){background-color: #f2f2f2}
+
+	#tabtrains tr:hover {
+					background-color: rgba(160, 217, 235, 0.705);
+					cursor: pointer;
+				}
 	
 </style>
 
@@ -37,21 +45,18 @@
 	})}
 
 	const submitReq = async () => {	
+		console.log('seeking for rides...')
 		const from = document.getElementById("from").value
 		const to = document.getElementById("to").value
 		const date = document.getElementById("date").value
+		const id_client = document.getElementById("id_client").value
 
 		const response = await $.ajax({
-		    url : "agency/logger/", // the endpoint
+		    url : "../search/", // the endpoint
 		    type : "POST", // http method
-			data : {'from':from,'to':to,'date':date}
+			data : {'from':from,'to':to,'date':date,'id_client':id_client}
 		})
-		console.log(firstname)
 		console.log(response)
-
-		document.location.reload(true);
-
-		console.log("rel")
 	}
 
 // data sent with the post request
@@ -87,11 +92,11 @@
 		</div>
 		<div class="sty2 col-lg-2 col-md-4 col-sm-4">
 			<b>Date</b>
-		<br><input  id ="date" type="date" class="input" ng-model="dt" placeholder="DD-MM-YYYY" />
+		<br><input  id ="date" type="date" class="input" ng-model="dt"/ value = "2020-11-04">
 		</div>
 		<div class="col-lg-2">
 			<br>
-			<button type="button" ng-click="submitReq()">Submit</button>
+			<button type="button" onclick="submitReq()">Submit</button>
 		</div>
 
 		</div>
@@ -104,12 +109,12 @@
 
 	</div>
 
-	<div>
-		<table>
+	<div class="center-div" style="overflow:auto;">
+		<table style="overflow: scroll ;white-space: nowrap; text-align:center" >
 			<tr>
 			<th>Train N°</th>
-			<th>Arrival</th>
 			<th>Departure</th>
+			<th>Arrival</th>
 			<th>Available sits</th>
 			<th>Price</th>
 		  </tr>
@@ -117,81 +122,54 @@
 	</div>
 	
 	<div class="center-div" style="height:250px; overflow:auto;">
-		<table  cellspacing="0" cellpadding="0" border="0" style="overflow: scroll ;white-space: nowrap; " >
-			<tbody id="tbody"></tbody>
+		<table id="tabtrains" style="overflow: scroll ;white-space: nowrap; text-align:center" >
+			<tbody id="tbod"></tbody>
 		</table>
 	  </div>
 
+	<input id="id_client"  type="hidden" value="{{request.session.id_client}}">
+
 <script>
 
-obj = [{
-    "key": "apple",
-    "value": 1.90
-	}, {
-    "key": "berry",
-    "value": 1.7
-	}, {
-    "key": "banana",
-    "value": 1.5
-	}, {
-    "key": "cherry",
-    "value": 1.2
-	},{
-    "key": "apple",
-    "value": 1.90
-	}, {
-    "key": "berry",
-    "value": 1.7
-	}, {
-    "key": "banana",
-    "value": 1.5
-	}, {
-    "key": "cherry",
-    "value": 1.2
-	},{
-    "key": "apple",
-    "value": 1.90
-	}, {
-    "key": "berry",
-    "value": 1.7
-	}, {
-    "key": "banana",
-    "value": 1.5
-	}, {
-    "key": "cherry",
-    "value": 1.2
-	},{
-    "key": "apple",
-    "value": 1.90
-	}, {
-    "key": "berry",
-    "value": 1.7
-	}, {
-    "key": "banana",
-    "value": 1.5
-	}, {
-    "key": "cherry",
-    "value": 1.2
-	}]
+trains = [
+	{"id":"132342","departure":"08:00","arrival":"10:00","sits":"324","price":"32"},
+	{"id":"983457","departure":"08:00","arrival":"10:00","sits":"324","price":"34"},
+	{"id":"I4U543","departure":"08:00","arrival":"10:00","sits":"324","price":"50"},
+	{"id":"394752","departure":"08:00","arrival":"10:00","sits":"324","price":"12"},
+	{"id":"4349873","departure":"08:00","arrival":"10:00","sits":"324","price":"65"},
+	{"id":"34789","departure":"08:00","arrival":"10:00","sits":"324","price":"14"},
+	{"id":"345292","departure":"08:00","arrival":"10:00","sits":"324","price":"20"},
+	]
 
-	var tbody = document.getElementById("tbody")
+	var tbody = document.getElementById("tbod")
 
-	for (var i = 0; i < obj.length; i++) {
-
-		console.log(i)
+	for (var i = 0; i < trains.length; i++) {
 
 		var tr = "<tr>";
 
-		/* Verification to add the last decimal 0 */
-		if (obj[i].value.toString().substring(obj[i].value.toString().indexOf('.'), obj[i].value.toString().length) < 2) 
-			obj[i].value += "0";
-
 		/* Must not forget the $ sign */
-		tr += "<td>" + obj[i].key + "</td>" + "<td>$" + obj[i].value.toString() + "</td></tr>";
+
+		train = trains[i]
+
+		for (var key in train){
+			tr += "<td id='"+train.id+"'>" + train[key] + "</td>";
+		}
+
+		tr += "</tr>"
 
 		/* We add the table row to the table body */
 		tbody.innerHTML += tr;
 	}
+
+	$(document).on('click', 'tr', function(e) {
+		const id_train = e.target.id
+		if (id_train.length>0){
+		window.location.href = '../payement/'+id_train
+		}
+	})
+
+
+
 </script>
 	  
 
