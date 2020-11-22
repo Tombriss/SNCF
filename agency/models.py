@@ -1,4 +1,6 @@
 from django.db import models
+from datetime import date
+from datetime import time
 
 # Create your models here.
 
@@ -45,7 +47,7 @@ class Client(models.Model):
 
 class Train(models.Model):
 
-    id_train = models.IntegerField()
+    id_train = models.IntegerField(default=0)
 
     def __str__(self):
         return str(self.id_train)
@@ -65,10 +67,10 @@ class Station(models.Model):
 
 class Car(models.Model):
 
-    number_available_places_car = models.IntegerField()
-    number_reserved_places_car = models.IntegerField()
-    car_number = models.IntegerField()
-    id_car = models.IntegerField()
+    number_available_places_car = models.IntegerField(default=0)
+    number_reserved_places_car = models.IntegerField(default=0)
+    car_number = models.IntegerField(default=0)
+    id_car = models.IntegerField(default=0)
 
     # FK pour id_train
     id_train = models.ForeignKey('Train', on_delete=models.CASCADE)
@@ -82,18 +84,16 @@ class Car(models.Model):
 class Ride(models.Model):
 
     id_ride = models.CharField(max_length=200)
-    price_ride = models.FloatField()
-    departure_date = models.DateField()
-    departure_time = models.TimeField()
-    arrival_date = models.DateField() 
-    arrival_time = models.TimeField()
+    price_ride = models.FloatField(default=0.0)
+    departure_date = models.DateField(default=date.today)
+    departure_time = models.TimeField(default=time)
+    arrival_date = models.DateField(default=date.today) 
+    arrival_time = models.TimeField(default=time)
+    departure_station = models.CharField(max_length=200)
+    arrival_station = models.CharField(max_length=200)
 
     # FK pour id_train
-    # FK pour id_gare_départ
-    # FK pour id_gare_arrivée
     id_train = models.ForeignKey('Train', on_delete=models.CASCADE)
-    departure_station = models.ForeignKey('Station', on_delete=models.CASCADE, related_name='departure', db_index=False, db_column='gare_depart')
-    arrival_station = models.ForeignKey('Station', on_delete=models.CASCADE, related_name='arrival', db_column='gare_arrivee')
 
     def __str__(self):
         return str(self.id_ride)
@@ -101,8 +101,8 @@ class Ride(models.Model):
 
 class Reservation(models.Model):
 
-    price_ticket = models.FloatField()
-    place_number = models.IntegerField()
+    price_ticket = models.FloatField(default=0.0)
+    place_number = models.IntegerField(default=0)
     id_reservation = models.CharField(max_length=200)
 
     # vérifier que les foreign keys ont du sens :
@@ -120,8 +120,8 @@ class Reservation(models.Model):
 
 class Place(models.Model):
 
-    id_place = models.IntegerField()
-    number_available_places_train = models.IntegerField()
+    id_place = models.IntegerField(default=0)
+    number_available_places_train = models.IntegerField(default=0)
 
     # FK pour id_trajet
     id_ride = models.ForeignKey('Ride', on_delete=models.CASCADE)
