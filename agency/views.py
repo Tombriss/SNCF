@@ -12,7 +12,7 @@ from django.contrib.auth import authenticate, login,logout
 # Create your views here.
 
 from django.views.generic import CreateView
-from .models import Client,Ride
+from .models import *
 from django.views.generic.base import TemplateView
 
 from datetime import datetime
@@ -38,17 +38,45 @@ def login(request):
     return render(request, 'login.html')
 
 def logger(request):
-    
-    request.session['id_client'] = request.POST.get('id_client','TB87382')
-    request.session['name'] = request.POST.get('name','')
-    request.session['firstname'] = request.POST.get('firstname','')
-    request.session['password'] = request.POST.get('reduction','')
-    request.session['password'] = request.POST.get('password','')
-    request.session['connected'] = True
+
+    lastname = request.POST.get('name','')
+    firstname = request.POST.get('firstname','')
+    password = request.POST.get('password','')
+    reduction = request.POST.get('reduction','NC')
 
     # check here if client in bdd, else, create client
 
-    return HttpResponse('ok')
+    newclient = False 
+
+    try:
+        client = Client.objects.get(firstname=firstname,lastname=lastname)
+        print('client in database')
+    except Client.DoesNotExist:
+        client = None
+        print('client not in database')
+
+    if client is not None:
+
+        if client.password == password:
+            print('good password')
+            resp = 'Welcome back !' 
+        else:
+            print('wrong password')
+            return HttpResponse('wrong password !')
+    
+    else:
+        client = Client(firstname=firstname,lastname=lastname,password=password,card=Reduction.objects.get(card=reduction))
+        resp = 'Welcome !'
+
+    request.session['connected'] = True
+    request.session['id_client'] = client.id
+    request.session['name'] = client.lastname
+    request.session['firstname'] = client.firstname
+    request.session['reduction'] = str(client.card)
+    request.session['password'] = client.password
+
+
+    return HttpResponse(resp)
 
 def payement(request,id_train='67855'):
 

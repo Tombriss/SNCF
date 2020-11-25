@@ -32,10 +32,12 @@
 		const response = await $.ajax({
 		    url : "agency/logger/", // the endpoint
 		    type : "POST", // http method
-			data : {'firstname':firstname,'name':name,'pwd':pwd}
+			data : {'firstname':firstname,'name':name,'password':pwd}
 		})
 		console.log(firstname)
 		console.log(response)
+
+		alert(response)
 
 		document.location.reload(true);
 
