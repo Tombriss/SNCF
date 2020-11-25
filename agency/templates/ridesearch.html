@@ -56,7 +56,39 @@
 		    type : "POST", // http method
 			data : {'from':from,'to':to,'date':date,'id_client':id_client}
 		})
+
+		var trains = response
 		console.log(response)
+
+		var tbody = document.getElementById("tbod")
+
+		console.log(trains[0])
+
+		for (var i = 0; i < trains.length; i++) {
+
+			var tr = "<tr>";
+
+			/* Must not forget the $ sign */
+
+			train = trains[i]
+			console.log(train)
+
+
+			for (var key in train){
+				tr += "<td id='"+train.id+"'>" + train[key] + "</td>";
+			}
+
+			tr += "</tr>"
+
+			/* We add the table row to the table body */
+			tbody.innerHTML += tr;
+		}
+
+		$(document).on('click', 'tr', function(e) {
+		const id_train = e.target.id
+		if (id_train.length>0){
+		window.location.href = '../payement/'+id_train
+		}})
 	}
 
 // data sent with the post request
@@ -130,16 +162,6 @@
 	<input id="id_client"  type="hidden" value="{{request.session.id_client}}">
 
 <script>
-
-trains = [
-	{"id":"132342","departure":"08:00","arrival":"10:00","sits":"324","price":"32"},
-	{"id":"983457","departure":"08:00","arrival":"10:00","sits":"324","price":"34"},
-	{"id":"I4U543","departure":"08:00","arrival":"10:00","sits":"324","price":"50"},
-	{"id":"394752","departure":"08:00","arrival":"10:00","sits":"324","price":"12"},
-	{"id":"4349873","departure":"08:00","arrival":"10:00","sits":"324","price":"65"},
-	{"id":"34789","departure":"08:00","arrival":"10:00","sits":"324","price":"14"},
-	{"id":"345292","departure":"08:00","arrival":"10:00","sits":"324","price":"20"},
-	]
 
 	var tbody = document.getElementById("tbod")
 

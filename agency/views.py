@@ -67,6 +67,7 @@ def logger(request):
     else:
         client = Client(firstname=firstname,lastname=lastname,password=password,card=Reduction.objects.get(card=reduction))
         resp = 'Welcome !'
+        # client.save()
 
     request.session['connected'] = True
     request.session['id_client'] = client.id
@@ -123,19 +124,23 @@ def ridesearch(request):
 def search(request):
 
     # conditions sur le trajet souhaités 
-    departure_station = request.POST.get('from')
-    arrival_station = request.POST.get('to')
+    departure_city = request.POST.get('from')
+    arrival_city = request.POST.get('to')
     departure_date = request.POST.get('date')
 
     # recuperation des trajets qui verifient cette condition dans la BDD 
-    rides = Ride.objects.raw('''SELECT * FROM agency_ride 
-                                WHERE departure_station = departure_station, arrival_station = arrival_station, departure_date = departure_date
-                                    ''')
+    dep_stations = Station.objects.raw('''SELECT * FROM agency_station WHERE (agency_station.city="{}") '''.format(departure_city))
+    arr_stations = Station.objects.raw('''SELECT * FROM agency_station WHERE (agency_station.city="{}") '''.format(arrival_city))
+    deps = [s.name_station for s in dep_stations]
+    arrs = [s.name_station for s in arr_stations]
 
-    print(rides)
+    rides = Ride.objects.filter(departure_station__in=deps,arrival_station__in=arrs,)
 
-    # id du client                
-    id_client = request.POST.get('id_client')
+
+    # print(rides)
+
+    # # id du client                
+    # id_client = request.POST.get('id_client')
 
     # # récupération de 
     # card_type = Client.objects.raw('''SELECT * FROM agency_client
@@ -150,16 +155,15 @@ def search(request):
     data=[]
     for r in rides :
         d={}
-        d['id_train'] = r.id_train.id_train
-        d['departure_station'] = r.departure_station.name_station
-        d['departure_date'] = r.departure_date.strftime("%Y-%m-%d")
-        d['departure_time'] = r.departure_time.strftime('%H:%M')
-        d['arrival_station'] = r.arrival_station.name_station
-        d['arrival_date'] = r.arrival_date.strftime("%Y-%m-%d")
-        d['arrival_time'] = r.arrival_time.strftime('%H:%M')
-        d['price'] = r.price_ride * (1-percentage)
+        d['id'] = r.id
+        #d['departure_station'] = r.departure_station.name_station
+        #d['arrival_station'] = r.arrival_station.name_station
+        #d['date'] = r.date.strftime("%Y-%m-%d")
+        d['departure'] = r.departure_time.strftime('%H:%M')
+        d['arrival'] = r.arrival_time.strftime('%H:%M')
+        d['price'] = r.price
+        d['sits'] = 50
         data.append(d)
-    
 
     return JsonResponse(data, safe=False)
 
