@@ -16,6 +16,7 @@ from .models import Client,Ride
 from django.views.generic.base import TemplateView
 
 from datetime import datetime
+from .random_populate import randpopulate
 
 
 class SessionVarView(TemplateView):
@@ -103,15 +104,17 @@ def search(request):
                                 WHERE departure_station = departure_station, arrival_station = arrival_station, departure_date = departure_date
                                     ''')
 
+    print(rides)
+
     # id du client                
     id_client = request.POST.get('id_client')
 
-    # récupération de 
-    card_type = Client.objects.raw('''SELECT * FROM agency_client
-                                    WHERE first_name = request.session['firstname'], last_name = request.session['name']''').reduction_card_type # ne garde que le type de card, type str ex: 'JC' pour junior card
+    # # récupération de 
+    # card_type = Client.objects.raw('''SELECT * FROM agency_client
+    #                                 WHERE first_name = request.session['firstname'], last_name = request.session['name']''').reduction_card_type # ne garde que le type de card, type str ex: 'JC' pour junior card
 
-    percentage = Reduction.objects.raw('''SELECT * FROM agency_reduction
-                                        WHERE reduction_card_type = card_type ''').reduction_percentage # [1] ne garde que le pourcentage, type float ex: 0.3
+    # percentage = Reduction.objects.raw('''SELECT * FROM agency_reduction
+    #                                     WHERE reduction_card_type = card_type ''').reduction_percentage # [1] ne garde que le pourcentage, type float ex: 0.3
 
 
 
@@ -131,6 +134,12 @@ def search(request):
     
 
     return JsonResponse(data, safe=False)
+
+def populate(request):
+
+    randpopulate()
+
+    return(HttpResponse('Population done'))
     
 
 

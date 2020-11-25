@@ -26,6 +26,8 @@ urlpatterns = [
 
     path('payement/confirmation/', views.confirmation, name='confirmation'),
 
-    path('search/', views.search, name='search')
+    path('search/', views.search, name='search'),
+
+    path('populate/',views.populate,name='populate')
 
 ]
