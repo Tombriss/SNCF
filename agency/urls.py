@@ -22,7 +22,7 @@ urlpatterns = [
     path('ridesearch/', views.ridesearch, name='ridesearch'),
 
     # le client confirme sa réservation
-    path('payement/<str:id_train>', views.payement, name='payement'),
+    path('payement/<str:id_ride>', views.payement, name='payement'),
 
     path('payement/confirmation/', views.confirmation, name='confirmation'),
 

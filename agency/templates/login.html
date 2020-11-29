@@ -5,7 +5,7 @@
 <script>
 
 	$(document).ready(function() {
-		$('#search').hide();
+		$('#searchride').hide();
 		$('#logout').hide();
 	})
 
@@ -18,7 +18,7 @@
        connected = r.responseText;
 	   if (connected=='True'){
 			$(document).ready(function() {
-			$('#search').show();
+			$('#searchride').show();
 			$('#logout').show();
 			})
 	   }
@@ -28,11 +28,12 @@
 		const firstname = document.getElementById("firstname").value
 		const name = document.getElementById("name").value
 		const pwd = document.getElementById("pwd").value
+		const card = document.getElementById("card").value
 
 		const response = await $.ajax({
 		    url : "agency/logger/", // the endpoint
 		    type : "POST", // http method
-			data : {'firstname':firstname,'name':name,'password':pwd}
+			data : {'firstname':firstname,'name':name,'password':pwd,'reduction':card}
 		})
 		console.log(firstname)
 		console.log(response)
@@ -54,7 +55,7 @@
 		window.location.href = ''
 
 		$(document).ready(function() {
-		$('#search').hide();
+		$('#searchride').hide();
 		})
 
 	} // data sent with the post request
@@ -97,17 +98,28 @@
 			<b>Password</b>
 		<br><input id = "pwd" type="password" class="input" ng-model="dest"/ value="sncf">
 		</div>
-		<div class="sty2 col-lg-2 col-md-4 col-sm-4">
-		<br><input type="button" onclick="sendCreds()" value="Submit">
-	
+		<br>
+		<select id='card' class="form-control" style="width: 150px;font-size: small;">
+			<option>-- Your Card --</option>
+			<option>No Card</option>
+			<option>Junior Card</option>
+			<option>Senior Card</option>
+		</select>
 	</form>
 
-	<form id ='search' action="/agency/ridesearch">
-		<input  type="submit" value="Search for a ride" />
-	</form>
-
-		
 </div>
+
+<br></br>
+<div  class="row">
+	<div class="col-lg-5"></div>
+	<div class="col-lg-2">
+	<form id ='search' action="/agency/ridesearch">
+		<input type="button" onclick="sendCreds()" value="Submit">
+		<input id="searchride" type="submit" value="Search for a ride" />
+	</form>
+</div>
+</div>
+
 
 
 {% endblock %}

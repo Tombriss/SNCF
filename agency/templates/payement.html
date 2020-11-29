@@ -206,38 +206,22 @@ const logout = async () => {
 	})}
 
 const payement = async () => {
+  
+
     const id_client = document.getElementById("id_client").value
     const id_train = document.getElementById("id_train").value
     const car = document.getElementById("car").value
     const sit = document.getElementById("sit").value
-
+    const sit_situation = document.getElementById("sit_situation").value
+    
     const response = await $.ajax({
 		    url : "confirmation/", // the endpoint
 		    type : "POST", // http method
-			data : {id_client,id_train,car,sit}
+			data : {id_client,id_train,car,sit,sit_situation}
 		})
-    console.log(response)
+    alert(response)
 }
 
-    // const response = $.ajax({
-	// 	    url : "agency/session/id_client", // the endpoint
-	// 	    type : "GET", // http method
-	// 		complete: function(r){
-    //    id_client = r.responseText;
-	//    if (connected=='True'){
-	// 		$(document).ready(function() {
-	// 		$('#search').show();
-	// 		$('#logout').show();
-	// 		})
-	//    }
-    // }})
-
-//     const response = await $.ajax({
-//         url : "../confirmation/",
-//         type : "POST",
-//         data : {id_client,id_}
-//     })
-// }
 </script>
 
 <div class="container-fluid">
@@ -266,7 +250,7 @@ const payement = async () => {
           </section>
           <section class="card-cont">
             <small>SNCF</small>
-            <h2>{{from}} --- {{to}}</h2>
+            <h2 style="font-size: 25px;">Départ : {{from}} <br>Arrivée : {{to}}</h2>
             <div class="even-date">
              <i class="fa fa-calendar"></i>
              <time>
@@ -276,7 +260,8 @@ const payement = async () => {
              </time>
             </div>
             <br></br>
-            <span>Voiture {{car}} place {{sit}}</span>
+            <span>Voiture {{car}} place {{sit}} ({{sit_situation}})</span>
+
             <br></br>
               {{request.session.firstname}} {{request.session.name}}
             <br></br>
@@ -305,7 +290,8 @@ const payement = async () => {
 
     <input id="id_client"  type="hidden" value="{{request.session.id_client}}">
     <input id="id_train" type="hidden" value="{{id_train}}">
-    <input id="car" type="hidden" value="{{car}}">
+    <input id="car" type="hidden" value="{{id_car}}">
     <input id="sit" type="hidden" value="{{sit}}">
+    <input id="sit_situation" type="hidden" value="{{sit_situation}}">
 
 {% endblock %}

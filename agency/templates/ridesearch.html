@@ -30,6 +30,7 @@
 </style>
 
 <script>
+	var trains = []
 	const logout = async () => {
 	const response = await $.ajax({
 		url : "../logout/", // the endpoint
@@ -51,18 +52,17 @@
 		const date = document.getElementById("date").value
 		const id_client = document.getElementById("id_client").value
 
-		const response = await $.ajax({
+		trains = await $.ajax({
 		    url : "../search/", // the endpoint
 		    type : "POST", // http method
 			data : {'from':from,'to':to,'date':date,'id_client':id_client}
 		})
 
-		var trains = response
-		console.log(response)
+		$("#tbod tr").remove(); 
+
+		console.log(trains)
 
 		var tbody = document.getElementById("tbod")
-
-		console.log(trains[0])
 
 		for (var i = 0; i < trains.length; i++) {
 
@@ -75,21 +75,26 @@
 
 
 			for (var key in train){
-				tr += "<td id='"+train.id+"'>" + train[key] + "</td>";
+				console.log(key)
+				tr += "<td id='"+i+"'>" + train[key] + "</td>";
 			}
 
 			tr += "</tr>"
 
 			/* We add the table row to the table body */
 			tbody.innerHTML += tr;
-		}
+		}}
 
 		$(document).on('click', 'tr', function(e) {
-		const id_train = e.target.id
-		if (id_train.length>0){
-		window.location.href = '../payement/'+id_train
+		const id_ride = trains[e.target.id].id
+		const availablity = trains[e.target.id].availability
+		if (availablity=="AVAILABLE"){
+		console.log('ok')
+		window.location.href = '../payement/'+id_ride
 		}})
-	}
+	
+	
+	
 
 // data sent with the post request
 </script>
@@ -124,7 +129,7 @@
 		</div>
 		<div class="sty2 col-lg-2 col-md-4 col-sm-4">
 			<b>Date</b>
-		<br><input  id ="date" type="date" class="input" ng-model="dt"/ value = "2020-11-04">
+		<br><input  id ="date" type="date" class="input" ng-model="dt"/ value = "2020-12-04">
 		</div>
 		<div class="col-lg-2">
 			<br>
@@ -147,7 +152,7 @@
 			<th>Train N°</th>
 			<th>Departure</th>
 			<th>Arrival</th>
-			<th>Available sits</th>
+			<th>Availablity</th>
 			<th>Price</th>
 		  </tr>
 	</table>
@@ -160,39 +165,6 @@
 	  </div>
 
 	<input id="id_client"  type="hidden" value="{{request.session.id_client}}">
-
-<script>
-
-	var tbody = document.getElementById("tbod")
-
-	for (var i = 0; i < trains.length; i++) {
-
-		var tr = "<tr>";
-
-		/* Must not forget the $ sign */
-
-		train = trains[i]
-
-		for (var key in train){
-			tr += "<td id='"+train.id+"'>" + train[key] + "</td>";
-		}
-
-		tr += "</tr>"
-
-		/* We add the table row to the table body */
-		tbody.innerHTML += tr;
-	}
-
-	$(document).on('click', 'tr', function(e) {
-		const id_train = e.target.id
-		if (id_train.length>0){
-		window.location.href = '../payement/'+id_train
-		}
-	})
-
-
-
-</script>
 	  
 
 {% endblock %}

@@ -1,3 +1,5 @@
+import numpy as np
+
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 
@@ -17,6 +19,7 @@ from django.views.generic.base import TemplateView
 
 from datetime import datetime
 from .random_populate import randpopulate
+
 
 
 class SessionVarView(TemplateView):
@@ -43,8 +46,9 @@ def logger(request):
     firstname = request.POST.get('firstname','')
     password = request.POST.get('password','')
     reduction = request.POST.get('reduction','NC')
-
-    # check here if client in bdd, else, create client
+    
+    REDS = {'No Card' : 'NC','Junior Card':'JC','Senior Card':'SC'}
+    reduction = REDS.get(reduction,'')
 
     newclient = False 
 
@@ -60,14 +64,19 @@ def logger(request):
         if client.password == password:
             print('good password')
             resp = 'Welcome back !' 
+            if len(reduction)>0 and reduction != client.card.card:
+                client.delete()
+                client = Client(firstname=firstname,lastname=lastname,password=password,card=Reduction.objects.get(card=reduction))
+                client.save()
         else:
             print('wrong password')
             return HttpResponse('wrong password !')
     
     else:
+        reduction = 'NC' if reduction == '' else reduction
         client = Client(firstname=firstname,lastname=lastname,password=password,card=Reduction.objects.get(card=reduction))
+        client.save()
         resp = 'Welcome !'
-        # client.save()
 
     request.session['connected'] = True
     request.session['id_client'] = client.id
@@ -79,43 +88,60 @@ def logger(request):
 
     return HttpResponse(resp)
 
-def payement(request,id_train='67855'):
+def payement(request,id_ride='67855'):
 
     context = {}
-    
-    context["id_train"] = id_train
-    context["from"] = "Paris"
-    context["to"] = "Lyon"
-    context["wday"] = "vendredi"
-    context["day"] = "02"
-    context["month"] = "décembre"
-    context["short_month"] = context["month"][:3]
-    context["year"] = "2020"
-    context["time_departure"] = "08:00" 
-    context["time_arrival"] = "10:00"
-    context["available"] = True
-    context["car"] = 6
-    context["sit"] = 43
 
-    context["price"] = 50
-    context["reduction"] = 'Carte Jeune'
-    context["final_price"] = 42
+    ride = Ride.objects.get(id=id_ride)
+    client = Client.objects.get(id=request.session["id_client"])
+
+    weekdays = ["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"]
+    mois=['Janvier','Fevrier','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre']
+
+    context["id_train"] = id_ride
+    context["from"] = ride.departure_station
+    context["to"] = ride.arrival_station
+    context["wday"] = weekdays[ride.date.weekday()]
+    context["day"] = str(ride.date)[-2:]
+    context["month"] = mois[ride.date.month-1]
+    context["short_month"] = context["month"][:3]
+    context["year"] = ride.date.year
+    context["time_departure"] = ride.departure_time.strftime('%H:%M')
+    context["time_arrival"] = ride.arrival_time.strftime('%H:%M')
+
+    for car in CarRide.objects.filter(id_ride=ride.id):
+        if car.number_available_places_car > 0:
+            context["id_car"] = car.id
+            context["car"] = car.car_number + 1
+            context["sit"] = car.total_places - car.number_available_places_car + 1
+            break
+
+    context["sit_situation"] = np.random.choice(['couloir','fenêtre'])
+    
+    context["price"] = ride.price
+    context["reduction"] = request.session.get('reduction','Pas de réduction')
+    context["final_price"] = np.round(ride.price * (1-client.card.percentage),1)
 
     return render(request, 'payement.html',context)
 
 def confirmation(request):
 
-    id_client = request.POST.get('id_client')
     id_train = request.POST.get('id_train')
-    car = request.POST.get('car')
+    id_car = request.POST.get('car')
     sit = request.POST.get('sit')
+    sit_situation = request.POST.get('sit_situation')
 
-    print(id_client,id_train,car,sit)
-    
-    return(HttpResponse('ok'))
+    car = CarRide.objects.get(id=id_car)
+    client = Client.objects.get(id=request.session["id_client"])
 
-def ticket(request):
-    return render(request, 'ticket.html')
+    try:
+        resa = Reservation.create(place_situation=sit_situation,id_car=car,id_client=client)
+        resa.save()
+        resp = 'Travel Confirmed !'
+    except:
+        resp = 'An error occured, please return to menu'
+
+    return(HttpResponse(resp))
 
 def ridesearch(request):
     return render(request, 'ridesearch.html')
@@ -134,46 +160,34 @@ def search(request):
     deps = [s.name_station for s in dep_stations]
     arrs = [s.name_station for s in arr_stations]
 
-    rides = Ride.objects.filter(departure_station__in=deps,arrival_station__in=arrs,)
+    rides = Ride.objects.filter(departure_station__in=deps,arrival_station__in=arrs,date=departure_date).order_by('departure_time')
 
-
-    # print(rides)
-
-    # # id du client                
-    # id_client = request.POST.get('id_client')
-
-    # # récupération de 
-    # card_type = Client.objects.raw('''SELECT * FROM agency_client
-    #                                 WHERE first_name = request.session['firstname'], last_name = request.session['name']''').reduction_card_type # ne garde que le type de card, type str ex: 'JC' pour junior card
-
-    # percentage = Reduction.objects.raw('''SELECT * FROM agency_reduction
-    #                                     WHERE reduction_card_type = card_type ''').reduction_percentage # [1] ne garde que le pourcentage, type float ex: 0.3
-
-
-
-    # construction de la liste de dictionnaires des trajets
     data=[]
+
     for r in rides :
         d={}
+
+        available = False
+
+        for car in CarRide.objects.filter(id_ride=r.id):
+            if car.number_available_places_car > 0:
+                available = True
+                break
+
         d['id'] = r.id
-        #d['departure_station'] = r.departure_station.name_station
-        #d['arrival_station'] = r.arrival_station.name_station
-        #d['date'] = r.date.strftime("%Y-%m-%d")
         d['departure'] = r.departure_time.strftime('%H:%M')
         d['arrival'] = r.arrival_time.strftime('%H:%M')
+        d['availability'] = 'AVAILABLE' if available else 'SOLD OUT'
         d['price'] = r.price
-        d['sits'] = 50
         data.append(d)
 
     return JsonResponse(data, safe=False)
 
 def populate(request):
 
+    # to do : mettre 1/4 de sold out
+
     randpopulate()
 
     return(HttpResponse('Population done'))
     
-
-
-    # to do :
-    # gérer la putin de relation trajet/gares pour pouvoir appliquer la condition WHERE

@@ -5,8 +5,8 @@ import datetime
 
 def randpopulate():
 
-    n_trains = 200
-    n_rides = 100
+    n_trains = 300
+    n_rides = 400
 
     stations = {
         'Paris':['Paris Gare de Lyon'],
@@ -31,11 +31,13 @@ def randpopulate():
 
     Ride.objects.all().delete()
 
+    t_now = datetime.datetime.now()
+
     for _ in range(n_rides):
 
-        price = np.round(25+30*np.random.random(),2)
-
-        t = datetime.datetime.now()+datetime.timedelta(np.random.randint(0,7))
+        price = np.round(25+30*np.random.random(),1)
+        
+        t = t_now + datetime.timedelta(minutes=np.random.randint(0,10000))
         delta = datetime.timedelta(hours=2,minutes=15-np.random.randint(0,30))
 
         date = str(t.date())
@@ -61,9 +63,11 @@ def randpopulate():
 
     for id_ride in range(1,n_rides):
 
+        soldout = np.random.random()
+
         for car_number in range(8):
 
-            nbre_available = np.random.randint(0,50)
+            nbre_available = np.random.randint(0,50) if soldout < 0.75 else 0
             obj = CarRide(number_available_places_car=nbre_available,car_number=car_number,id_ride=Ride.objects.get(id=id_ride))
             obj.save()
 
