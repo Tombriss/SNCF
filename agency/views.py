@@ -23,10 +23,16 @@ from .random_populate import randpopulate
 
 
 class SessionVarView(TemplateView):
+
+    # view assez générale pour get un paramètre de session
+
     def get(self, request, *args, **kwargs):
         return HttpResponse(request.session.get(kwargs['key'],''))
 
 def logout(request):
+
+    # view pour logout l'utilisateur 
+
     request.session['id_client'] = ''
     request.session['name'] = ''
     request.session['firstname'] = ''
@@ -38,9 +44,13 @@ def logout(request):
 
 def login(request):
 
+    # view qui renvoie la page de login
+
     return render(request, 'login.html')
 
 def logger(request):
+
+    # view pour connecter/créer l'utilisateur
 
     lastname = request.POST.get('name','')
     firstname = request.POST.get('firstname','')
@@ -53,6 +63,7 @@ def logger(request):
     newclient = False 
 
     try:
+        # On regarde si le client est dans la bdd
         client = Client.objects.get(firstname=firstname,lastname=lastname)
         print('client in database')
     except Client.DoesNotExist:
@@ -60,6 +71,8 @@ def logger(request):
         print('client not in database')
 
     if client is not None:
+
+        # si oui, on check le mot de passe
 
         if client.password == password:
             print('good password')
@@ -73,10 +86,15 @@ def logger(request):
             return HttpResponse('wrong password !')
     
     else:
+
+        # si non, on crée un nouvel utilisateur
+
         reduction = 'NC' if reduction == '' else reduction
         client = Client(firstname=firstname,lastname=lastname,password=password,card=Reduction.objects.get(card=reduction))
         client.save()
         resp = 'Welcome !'
+
+    # on rentre les infos de l'utilisateurs 
 
     request.session['connected'] = True
     request.session['id_client'] = client.id
@@ -89,6 +107,8 @@ def logger(request):
     return HttpResponse(resp)
 
 def payement(request,id_ride='67855'):
+
+    # View pour visualiser le ticket et payer
 
     context = {}
 
@@ -126,6 +146,8 @@ def payement(request,id_ride='67855'):
 
 def confirmation(request):
 
+    # View pour confirmer le payement
+
     id_train = request.POST.get('id_train')
     id_car = request.POST.get('car')
     sit = request.POST.get('sit')
@@ -144,10 +166,15 @@ def confirmation(request):
     return(HttpResponse(resp))
 
 def ridesearch(request):
+
+    # view pour la recherche de trajet
+
     return render(request, 'ridesearch.html')
 
 
 def search(request):
+
+    # view pour get les trajets recherchés par l'utilisateur
 
     # conditions sur le trajet souhaités 
     departure_city = request.POST.get('from')
@@ -155,6 +182,8 @@ def search(request):
     departure_date = request.POST.get('date')
 
     # recuperation des trajets qui verifient cette condition dans la BDD 
+
+    # (utilisation des requêtes brutes SQL pour l'exemple, parfois impossible d'utiliser le raw sql avec django. ex: lorqu'on veut joindre deux tables notamment)
     dep_stations = Station.objects.raw('''SELECT * FROM agency_station WHERE (agency_station.city="{}") '''.format(departure_city))
     arr_stations = Station.objects.raw('''SELECT * FROM agency_station WHERE (agency_station.city="{}") '''.format(arrival_city))
     deps = [s.name_station for s in dep_stations]
@@ -181,11 +210,13 @@ def search(request):
         d['price'] = r.price
         data.append(d)
 
+    # On renvoie les trains sous forme de json
+
     return JsonResponse(data, safe=False)
 
 def populate(request):
 
-    # to do : mettre 1/4 de sold out
+    # view pour peupler aléatoirement la base de donnée
 
     randpopulate()
 

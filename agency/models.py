@@ -3,12 +3,12 @@ from datetime import date
 from datetime import time
 import numpy as np
 
-# Create your models here.
+# Creations des modèles : Reduction, Client, Train etc
 
 
 class Reduction(models.Model):
 
-    # création d'un menu déroulant, correctement réalisée ?
+
     NO_CARD = 'NC'
     JUNIOR_CARD = 'JC'
     SENIOR_CARD = 'SC'
@@ -117,10 +117,9 @@ class Reservation(models.Model):
         if resa.final_price is None:
             resa.final_price = resa.id_car.id_ride.price * (1-resa.id_client.card.percentage)
         if resa.place_situation is None:
-            # situation = 'fenêtre' if (resa.id % 2 == 0) else 'couloir'
+
             resa.place_situation = np.random.choice(['couloir','fenêtre'])
 
-        # do something with the book
         return resa
 
 
